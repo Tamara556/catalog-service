@@ -39,17 +39,3 @@ management:
 
 polar:
   greeting: Welcome to the local book catalog!
-
-# GitHub Actions Fix
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Grant execute permission for Gradle wrapper
-        run: chmod +x gradlew
-
-      - name: Build with Gradle
-        run: ./gradlew build
