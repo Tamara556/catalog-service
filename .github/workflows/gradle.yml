@@ -64,6 +64,11 @@ jobs:
           distribution: temurin
           java-version: 17
           cache: gradle
+      - name: Set environment variables
+        run: |
+          echo "REGISTRY=ghcr.io" >> $GITHUB_ENV
+          echo "IMAGE_NAME=catalog-service" >> $GITHUB_ENV
+          echo "VERSION=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
       - name: Build container image
         run: |
           chmod +x gradlew
