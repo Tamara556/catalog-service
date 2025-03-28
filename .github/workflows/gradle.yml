@@ -1,17 +1,10 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+name: Commit Stage
+on: push
 
-name: Java CI with Gradle
-
-on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: Tamara556/catalog-service
+  VERSION: latest
 
 jobs:
   build:
@@ -45,10 +38,9 @@ jobs:
         if: success() || failure()
         with:
           sarif_file: ${{ steps.scan.outputs.sarif }}
-
   package:
     name: Package and Publish
-    if: github.ref == 'refs/heads/master' || github.event_name == 'pull_request'
+    if: ${{ github.ref == 'refs/heads/main' }}
     needs: [ build ]
     runs-on: ubuntu-22.04
     permissions:
@@ -64,11 +56,6 @@ jobs:
           distribution: temurin
           java-version: 17
           cache: gradle
-      - name: Set environment variables
-        run: |
-          echo "REGISTRY=ghcr.io" >> $GITHUB_ENV
-          echo "IMAGE_NAME=catalog-service" >> $GITHUB_ENV
-          echo "VERSION=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
       - name: Build container image
         run: |
           chmod +x gradlew
